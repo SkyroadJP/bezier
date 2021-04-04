@@ -1,0 +1,23 @@
+PODS:
+  - bezier (1.0.1):
+    - eigen (~> 3.3.0)
+  - eigen (3.3.9.1)
+
+DEPENDENCIES:
+  - bezier (from `../bezier.podspec`)
+
+SPEC REPOS:
+  https://github.com/SkyroadJP/Cocoapods-Specs.git:
+    - eigen
+
+EXTERNAL SOURCES:
+  bezier:
+    :podspec: "../bezier.podspec"
+
+SPEC CHECKSUMS:
+  bezier: 7e8f598c9859451761260b4840696f43feb053fb
+  eigen: bcef8e11c7361d63b50f336561a1c0e321282917
+
+PODFILE CHECKSUM: 998dc4cba5525951faebc7f69f4d7bf70d424ff2
+
+COCOAPODS: 1.10.1

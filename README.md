@@ -1,6 +1,6 @@
 # How to publish
 ```
-pod repo push skyroad bezier.podspec --use-libraries --allow-warnings --sources=https://github.com/SkyroadJP/Cocoapods-Specs.git
+pod repo push skyroad bezier.podspec --use-libraries --allow-warnings --skip-import-validation --sources=https://github.com/SkyroadJP/Cocoapods-Specs.git
 ```
 
 

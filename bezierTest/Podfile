@@ -1,0 +1,14 @@
+source 'https://github.com/SkyroadJP/Cocoapods-Specs.git'
+
+source 'https://github.com/CocoaPods/Specs.git'
+
+# Uncomment the next line to define a global platform for your project
+platform :ios, '12.3'
+
+target 'bezierTest' do
+  # Comment the next line if you don't want to use dynamic frameworks
+  use_frameworks!
+  pod 'bezier', :podspec => '../bezier.podspec'
+  # Pods for bezierTest
+  # pod 'eigen', :source => 'https://github.com/SkyroadJP/Cocoapods-Specs.git'
+end

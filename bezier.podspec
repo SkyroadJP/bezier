@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "bezier"
-  spec.version      = "1.0.1"
+  spec.version      = "1.0.3"
   spec.summary      = "Algorithms for bezier fitting"
 
   # This description is used to generate tags and improve search results.
@@ -93,7 +93,7 @@ Pod::Spec.new do |spec|
 
   spec.source_files  = "src/*", "src/**/*", "include/*", "include/**/*"
   # spec.exclude_files = "Classes/Exclude"
-
+  spec.header_mappings_dir = 'include'
   spec.public_header_files = "include/*", "include/**/*"
 
 
@@ -121,8 +121,7 @@ Pod::Spec.new do |spec|
   # spec.frameworks = "SomeFramework", "AnotherFramework"
 
   # spec.library   = "iconv"
-  # spec.libraries = "iconv", "xml2"
-
+  spec.libraries = "stdc++"
 
   # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
   #
@@ -131,10 +130,14 @@ Pod::Spec.new do |spec|
   #  you can include multiple dependencies to ensure it works.
 
   spec.requires_arc = false
-  # spec.static_framework = true
+  spec.static_framework = true
 
-  spec.xcconfig = { "HEADER_SEARCH_PATHS" => '"$(PODS_ROOT)/bezier/include" "$(PODS_ROOT)/eigen"' }
-  # spec.compiler_flags = '-DEIGEN_MPL2_ONLY'
+  spec.xcconfig = { "HEADER_SEARCH_PATHS" => '"$(PODS_ROOT)/bezier/include" "$(PODS_ROOT)/eigen"',
+                    'CLANG_CXX_LANGUAGE_STANDARD' => 'c++14',
+                    'CLANG_CXX_LIBRARY' => 'libc++'
+                  }
+  spec.pod_target_xcconfig = {'HEADER_SEARCH_PATHS' => '"$(PODS_TARGET_SRCROOT)/include"'}
+  
   spec.dependency "eigen", "~> 3.3.0"
 
 end
