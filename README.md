@@ -1,3 +1,9 @@
+# How to publish
+```
+pod repo push skyroad bezier.podspec --use-libraries --allow-warnings --sources=https://github.com/SkyroadJP/Cocoapods-Specs.git
+```
+
+
 # Bezier
 Library for least-square fitting [composite Bezier curves](https://en.wikipedia.org/wiki/Composite_B%C3%A9zier_curve).
 

@@ -1,5 +1,5 @@
 #include <stdexcept>
-#include "bezier/math/misc.h"
+#include <bezier/math/misc.h>
 
 namespace bezier {
 
