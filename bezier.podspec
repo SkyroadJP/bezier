@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "bezier"
-  spec.version      = "1.0.3"
+  spec.version      = "1.0.4"
   spec.summary      = "Algorithms for bezier fitting"
 
   # This description is used to generate tags and improve search results.
@@ -130,7 +130,7 @@ Pod::Spec.new do |spec|
   #  you can include multiple dependencies to ensure it works.
 
   spec.requires_arc = false
-  spec.static_framework = true
+  # spec.static_framework = true
 
   spec.xcconfig = { "HEADER_SEARCH_PATHS" => '"$(PODS_ROOT)/bezier/include" "$(PODS_ROOT)/eigen"',
                     'CLANG_CXX_LANGUAGE_STANDARD' => 'c++14',
