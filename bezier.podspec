@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "bezier"
-  spec.version      = "1.0.4"
+  spec.version      = "1.1.0"
   spec.summary      = "Algorithms for bezier fitting"
 
   # This description is used to generate tags and improve search results.
