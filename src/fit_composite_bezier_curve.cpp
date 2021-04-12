@@ -72,48 +72,67 @@ namespace bezier {
     CompositeBezierCurve fit_composite_bezier_curve(const vector<VectorXd> & data_points,
                                                     const vector<int> & joints,
                                                     int curve_degrees,
-                                                    bool closed_curve){
+                                                    bool closed_curve,
+                                                    const vector<double> & confidence){
         vector<int> curve_degrees_vec(joints.size()+1, curve_degrees);
-        return fit_composite_bezier_curve(data_points, joints, curve_degrees_vec, closed_curve);
+        return fit_composite_bezier_curve(data_points, joints, curve_degrees_vec, closed_curve, confidence);
     }
 
 
     CompositeBezierCurve fit_composite_bezier_curve(const vector<VectorXd> & data_points,
                                                     const vector<int> & joints,
                                                     const vector<int> & curve_degrees,
-                                                    bool closed_curve){
-        return fit_composite_bezier_curve(partition_data<VectorXd>(data_points, joints),
-                                          curve_degrees, closed_curve);
+                                                    bool closed_curve,
+                                                    const vector<double> & confidence){
+        if (confidence.empty()) {
+            return fit_composite_bezier_curve(partition_data<VectorXd>(data_points, joints),
+                                              curve_degrees, closed_curve);
+        } else {
+            return fit_composite_bezier_curve(partition_data<VectorXd>(data_points, joints),
+                                              curve_degrees, closed_curve, partition_data<double>(confidence, joints));
+        }
     }
 
 
     CompositeBezierCurve fit_composite_bezier_curve(const vector<vector<VectorXd>> & data_points,
                                                     const vector<int> & curve_degrees,
-                                                    bool closed_curve){
+                                                    bool closed_curve,
+                                                    const vector<vector<double>> & confidence){
         return fit_composite_bezier_curve(data_points,
                                           initialize_parameterization(data_points, closed_curve),
                                           curve_degrees,
-                                          closed_curve);
+                                          closed_curve,
+                                          confidence);
     }
 
 
-    MatrixXd parameterization_matrix(const vector<double> &parameterization, int degree){
+    MatrixXd parameterization_matrix(const vector<double> &parameterization, int degree, const vector<double> & confidence){
         MatrixXd T(parameterization.size(), degree+1);
         for(int i = 0; i < parameterization.size(); i++){
             double t = 1;
             for(int j = 0; j < degree + 1; j++){
                 T(i, j) = t;
+                if (!confidence.empty()) {
+                    T(i, j) *= confidence[i];
+                }
                 t *= parameterization[i];
             }
         }
         return T;
     }
 
-    MatrixXd data_matrix(const vector<VectorXd> & data_points){
+    MatrixXd data_matrix(const vector<VectorXd> & data_points, const vector<double> & confidence={}){
         MatrixXd data(data_points.size(), data_points[0].rows());
-        for(int i = 0; i < data_points.size(); i++){
-            data.block(i, 0, 1, data_points[i].rows()) = data_points[i].transpose();
+        if (confidence.empty()) {
+            for(int i = 0; i < data_points.size(); i++){
+                data.block(i, 0, 1, data_points[i].rows()) = data_points[i].transpose();
+            }
+        } else {
+            for(int i = 0; i < data_points.size(); i++){
+                data.block(i, 0, 1, data_points[i].rows()) = data_points[i].transpose() * confidence[i];
+            }
         }
+        
         return data;
     }
 
@@ -178,7 +197,8 @@ namespace bezier {
     CompositeBezierCurve fit_composite_bezier_curve(const vector<vector<VectorXd>> & data_points,
                                                     const vector<vector<double>> & parameterization,
                                                     const vector<int> & curve_degrees,
-                                                    bool closed_curve){
+                                                    bool closed_curve,
+                                                    const vector<vector<double>> & confidence){
 
         // check valid arguments
         _argument_check_fit_composite_bezier_curve(data_points, parameterization, curve_degrees, closed_curve);
@@ -189,19 +209,33 @@ namespace bezier {
         // set up data matrices
 
         vector<MatrixXd> data_matrices;
-        for (const auto & d : data_points){
-            data_matrices.push_back(data_matrix(d));
+        // for (const auto & d : data_points){
+        if (confidence.empty()) {
+            for (int i = 0; i < number_of_curves; i++) {
+                data_matrices.push_back(data_matrix(data_points[i]));
+            }
+        } else {
+            for (int i = 0; i < number_of_curves; i++) {
+                data_matrices.push_back(data_matrix(data_points[i], confidence[i]));
+            }
         }
 
         // set up parameterization matrices containing (1 t t^2 t^3 ... t^n)
 
         vector<MatrixXd> t_matrices;
         vector<MatrixXd> t_product_matrices;
-        for (int j = 0; j < number_of_curves; ++j) {
-            MatrixXd t = parameterization_matrix(parameterization[j], curve_degrees[j]);
-            t_matrices.push_back(t);
-            t_product_matrices.push_back(t.transpose() * t);
-
+        if (confidence.empty()) {
+            for (int j = 0; j < number_of_curves; ++j) {
+                MatrixXd t = parameterization_matrix(parameterization[j], curve_degrees[j]);
+                t_matrices.push_back(t);
+                t_product_matrices.push_back(t.transpose() * t);
+            }
+        } else {
+            for (int j = 0; j < number_of_curves; ++j) {
+                MatrixXd t = parameterization_matrix(parameterization[j], curve_degrees[j], confidence[j]);
+                t_matrices.push_back(t);
+                t_product_matrices.push_back(t.transpose() * t);
+            }
         }
 
         // set up Q and R matrices
