@@ -21,7 +21,8 @@ namespace bezier {
     CompositeBezierCurve fit_composite_bezier_curve(const vector<vector<VectorXd>> & data_points,
                                                     const vector<vector<double>> & parameterization,
                                                     const vector<int> & curve_degrees,
-                                                    bool closed_curve);
+                                                    bool closed_curve,
+                                                    const vector<vector<double>> & confidence={});
     /**
      * Least square fit composite Bezier curve
      * @param data_points : data points associated with each curve
@@ -31,7 +32,8 @@ namespace bezier {
      */
     CompositeBezierCurve fit_composite_bezier_curve(const vector<vector<VectorXd>> & data_points,
                                                     const vector<int> & curve_degrees,
-                                                    bool closed_curve);
+                                                    bool closed_curve,
+                                                    const vector<vector<double>> & confidence={});
 
     /**
      * Least square fit composite Bezier curve
@@ -44,7 +46,8 @@ namespace bezier {
     CompositeBezierCurve fit_composite_bezier_curve(const vector<VectorXd> & data_points,
                                                     const vector<int> & joints,
                                                     const vector<int> & curve_degrees,
-                                                    bool closed_curve);
+                                                    bool closed_curve,
+                                                    const vector<double> & confidence={});
 
     /**
      * Least square fit composite Bezier curve
@@ -57,14 +60,15 @@ namespace bezier {
     CompositeBezierCurve fit_composite_bezier_curve(const vector<VectorXd> & data_points,
                                                     const vector<int> & joints,
                                                     int curve_degrees,
-                                                    bool closed_curve);
+                                                    bool closed_curve,
+                                                    const vector<double> & confidence={});
 
     vector<double> chordlength_parameterization(const vector<VectorXd> &data_points,
                                                 const VectorXd &start_point = VectorXd(0));
 
     vector<vector<double>> initialize_parameterization(const vector<vector<VectorXd>> & data_points, bool closed_curve);
 
-    MatrixXd parameterization_matrix(const vector<double> &parameterization, int degree);
+    MatrixXd parameterization_matrix(const vector<double> &parameterization, int degree, const vector<double> & confidence = {});
 }
 
 
